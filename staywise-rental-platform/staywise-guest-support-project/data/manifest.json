@@ -1,0 +1,9 @@
+{
+  "seed": 42,
+  "reference_date": "2026-09-18",
+  "listings": 30,
+  "guests": 150,
+  "bookings": 500,
+  "calendar_rows": 5400,
+  "policy_pdfs": 31
+}

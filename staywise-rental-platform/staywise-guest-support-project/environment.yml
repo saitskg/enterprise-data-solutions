@@ -1,0 +1,20 @@
+# Snowflake reads this file when starting the Streamlit warehouse runtime.
+# Packages resolve through Snowflake's supported package channel.
+# Warehouse runtime version specifications use '=' and optional '*' suffixes.
+# Comparison operators such as '>=' are not supported by this runtime's parser.
+# Leave Python to the managed runtime; do not pass it as an Anaconda package.
+# If needed, select Python 3.11 in the Streamlit editor's Packages menu.
+name: staywise
+channels:
+  - snowflake
+dependencies:
+  # Pin a supported warehouse-runtime release for consistent UI behavior.
+  - streamlit=1.50.0
+  # Snowpark supplies the active session, SQL execution, and procedure calls.
+  - snowflake-snowpark-python
+  # Pandas builds small dashboard tables and charts.
+  - pandas
+  # Parse generated SQL structurally instead of trusting string matching.
+  - sqlglot=26.*
+  # Reject malformed LLM decisions and tool arguments before execution.
+  - jsonschema=4.*

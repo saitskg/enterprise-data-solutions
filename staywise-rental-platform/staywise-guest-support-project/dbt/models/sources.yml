@@ -1,0 +1,17 @@
+# RAW tables are loaded by sql/02_load.sql, before dbt starts.
+version: 2
+# A source declares an existing object; dbt does not create these RAW tables.
+sources:
+  - name: raw
+    database: STAYWISE_DB
+    schema: RAW
+    tables:
+      - name: listings
+        description: One synthetic short-stay property.
+      - name: guests
+        description: Synthetic display names only; no real personal data.
+      - name: bookings
+        description: One reservation, with immutable booked rates.
+      - name: listing_calendar
+        description: Listing-night rates and host blocks; bookings determine occupancy.
+

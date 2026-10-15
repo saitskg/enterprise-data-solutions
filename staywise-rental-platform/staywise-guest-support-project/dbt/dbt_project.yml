@@ -1,0 +1,30 @@
+# The profile name below must match dbt_projects_profiles.yml
+# This file means - What belongs to this project, and how should dbt build it?
+name: staywise
+version: '1.0.0'
+config-version: 2
+profile: staywise
+# Snowflake resolves these paths relative to the project stage root.
+model-paths: [models]
+# Upload data/policy_rules.csv to the project stage under data/.
+seed-paths: [data]
+test-paths: [tests]
+models:
+  staywise:
+    # Persist fact, dimension, and mart outputs as tables for repeated tool queries.
+    +materialized: table
+    # Preserve explicit reader grants when dbt replaces a table on subsequent runs.
+    +copy_grants: true
+    staging:
+      +materialized: view
+# This seed is a curated rules table; PDFs are its human-readable evidence.
+seeds:
+  staywise:
+    policy_rules:
+      # Force stable identifiers and effective dates rather than inferring them.
+      +column_types:
+        rule_set_id: varchar
+        allowed_pet_types: varchar
+        effective_from: date
+        effective_to: date
+        source_document_id: varchar

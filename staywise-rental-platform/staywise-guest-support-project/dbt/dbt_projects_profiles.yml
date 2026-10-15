@@ -1,0 +1,19 @@
+# Snowflake-hosted dbt uses the caller's account/user; no stored password is needed.
+# Account/user stay empty because the native dbt runtime supplies identity.
+# This file tells - Where should dbt run, and where should it create the outputs?
+staywise:
+  target: dev
+  outputs:
+    dev:
+      type: snowflake
+      # Do not add credentials: execution uses the caller in this account.
+      account: ''
+      user: ''
+      # The builder owns the raw sources and all objects produced by dbt.
+      role: STAYWISE_BUILDER
+      warehouse: STAYWISE_WH
+      database: STAYWISE_DB
+      schema: ANALYTICS
+      # Limit concurrent dbt model execution to two workers on STAYWISE_WH.
+      threads: 2
+

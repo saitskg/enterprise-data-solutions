@@ -1,0 +1,64 @@
+# dbt tests are executable data contracts, not just column documentation.
+# unique/not_null checks protect joins; relationships tests validate foreign keys.
+# Generic-test arguments use dbt 1.10.5+ syntax, supported by our hosted version.
+version: 2
+models:
+  - name: dim_listing
+    description: One listing with a broad pet flag; detailed species rules live in policy_rules.
+    columns:
+      - name: listing_id
+        tests: [unique, not_null]
+      - name: rule_set_id
+        tests:
+          - relationships:
+              arguments:
+                to: ref('policy_rules')
+                field: rule_set_id
+  - name: dim_guest
+    description: One synthetic guest; display_name is a synthetic display name.
+    columns:
+      - name: guest_id
+        tests: [unique, not_null]
+  - name: fct_booking
+    description: Reservation grain with check-in-month booked value; not recognized revenue.
+    columns:
+      - name: booking_id
+        tests: [unique, not_null]
+      - name: listing_id
+        tests:
+          - not_null
+          - relationships:
+              arguments:
+                to: ref('dim_listing')
+                field: listing_id
+      - name: guest_id
+        tests:
+          - relationships:
+              arguments:
+                to: ref('dim_guest')
+                field: guest_id
+      - name: rule_set_id
+        tests:
+          - relationships:
+              arguments:
+                to: ref('policy_rules')
+                field: rule_set_id
+      - name: status
+        tests:
+          - accepted_values:
+              arguments:
+                values: [confirmed, completed, cancelled]
+  - name: mart_booking_context
+    description: One row per reservation with attributes and policy provenance for Analyst.
+    columns:
+      - name: booking_id
+        tests: [unique, not_null]
+seeds:
+  - name: policy_rules
+    description: Curated fictional rules aligned with the supplied policy PDFs.
+    # Deterministic fees and pet species come from this table, never LLM arithmetic.
+    columns:
+      - name: rule_set_id
+        tests: [unique, not_null]
+      - name: source_document_id
+        tests: [not_null]

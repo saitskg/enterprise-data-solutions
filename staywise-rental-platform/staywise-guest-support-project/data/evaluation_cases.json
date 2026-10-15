@@ -1,0 +1,124 @@
+[
+  {
+    "id": "extension_blocked",
+    "kind": "tool",
+    "listing_id": "L001",
+    "mode": "extension",
+    "booking_id": "B-1042",
+    "pet_type": "cat",
+    "expected_status": "unavailable"
+  },
+  {
+    "id": "dogs_only",
+    "kind": "tool",
+    "listing_id": "L002",
+    "mode": "new_stay",
+    "booking_id": "",
+    "pet_type": "cat",
+    "expected_status": "ineligible"
+  },
+  {
+    "id": "cat_friendly_quote",
+    "kind": "tool",
+    "listing_id": "L003",
+    "mode": "new_stay",
+    "booking_id": "",
+    "pet_type": "cat",
+    "expected_status": "eligible",
+    "expected_total": 8500
+  },
+  {
+    "id": "no_pet_quote",
+    "kind": "tool",
+    "listing_id": "L003",
+    "mode": "new_stay",
+    "booking_id": "",
+    "pet_type": "none",
+    "expected_status": "eligible",
+    "expected_total": 8200
+  },
+  {
+    "id": "unknown_listing",
+    "kind": "tool",
+    "listing_id": "L999",
+    "mode": "new_stay",
+    "booking_id": "",
+    "pet_type": "cat",
+    "expected_status": "needs_review"
+  },
+  {
+    "id": "minimum_stay",
+    "kind": "tool",
+    "listing_id": "L003",
+    "mode": "new_stay",
+    "booking_id": "",
+    "pet_type": "cat",
+    "check_out": "2026-09-24",
+    "expected_status": "ineligible"
+  },
+  {
+    "id": "missing_calendar",
+    "kind": "tool",
+    "listing_id": "L003",
+    "mode": "new_stay",
+    "booking_id": "",
+    "pet_type": "cat",
+    "check_in": "2026-12-29",
+    "check_out": "2026-12-31",
+    "expected_status": "needs_review"
+  },
+  {
+    "id": "booking_lookup",
+    "kind": "agent",
+    "question": "For B-1042, what are the listing ID and checkout date?",
+    "required_tools": [
+      "query_stay_data"
+    ],
+    "expected_text": [
+      "L001",
+      "2026-09-23"
+    ]
+  },
+  {
+    "id": "rule_lookup",
+    "kind": "agent",
+    "question": "Can a guest bring a cat to listing L002? Cite the rule.",
+    "required_tools": [
+      "search_stay_documents"
+    ],
+    "required_document": "DOC_R002"
+  },
+  {
+    "id": "analytics",
+    "kind": "agent",
+    "question": "How many reservations are confirmed, completed, and cancelled?",
+    "required_tools": [
+      "query_stay_data"
+    ]
+  },
+  {
+    "id": "combined",
+    "kind": "agent",
+    "question": "Can I extend B-1042 by two nights? If unavailable, find a stay in Candolim for those extra nights under INR 9000 total. I am traveling with my cat.",
+    "resolution": true,
+    "required_tools": [
+      "query_stay_data",
+      "find_available_stays",
+      "search_stay_documents",
+      "quote_stay_option"
+    ],
+    "expected_listing": "L003",
+    "expected_total": 8500
+  },
+  {
+    "id": "budget_no_match",
+    "kind": "agent",
+    "question": "Find a cat-friendly stay in Candolim for September 23-25, 2026, for two guests under INR 100 total.",
+    "resolution": true,
+    "budget": 100,
+    "required_tools": [
+      "find_available_stays"
+    ],
+    "expect_no_quote": true
+  }
+]
